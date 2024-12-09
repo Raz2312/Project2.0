@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="page-container">
+    <!-- Left Sidebar with Items -->
+    <div class="sidebar">
+        <h3 class="section-title">My Items</h3>
+        <div class="items-section">
+            {% for item in current_user.items %}
+            <div class="item-wrapper">
+                <a href="{{ url_for('list.BigItem', item_id=item.item_id, owner_id=current_user.id) }}" class="card-link">
+                    <div class="card">
+                        <div class="img-wrapper">
+                            <img src="{{ url_for('static', filename='dunk.png') }}" 
+                                 class="card-img-top" 
+                                 alt="Item Image">
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <span class="price">₪{{ item.price }}</span><br>
+                                <span class="item-name">{{ item.name }}</span><br>
+                                <span class="year-text">{{ item.year }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-box-open empty-icon"></i>
+                <p>No items in your list yet.</p>
+                <a href="{{ url_for('views.home') }}" class="btn btn-primary">Browse Items</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="profile-card">
+            <div class="profile-header">
+                <img src="{{ url_for('static', filename='dunk.png') }}" 
+                     alt="Profile picture" 
+                     class="profile-picture">
+                <div class="user-name">
+                    {{ current_user.first_name }} {{ current_user.last_name }}
+                </div>
+            </div>
+
+            <div class="bio-section">
+                <ul class="list-group list-group-flush" id="Bio">
+                    {% for Bio in user.Bio %}
+                    <li class="list-group-item">
+                        {{ Bio.data }}
+                        <button type="button" class="close" onClick="deleteNote('{{ Bio.id }}')">   
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <form method="POST">
+                    <textarea name="Bio" id="Bio" class="form-control"></textarea>
+                    <br />
+                    <div align="center">
+                        <button type="submit" class="btn btn-primary">Add Bio</button>
+                    </div>
+                </form>
+                <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary btn-sm mt-3">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .page-container {
+        display: flex;
+        min-height: 1vh;
+        background-color: #ffffff;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+        width: 300px;
+        background-color: #fefcfc;
+        padding: 20px;
+        border-right: 1px solid #000000;
+        height: 100vh;
+        position: fixed;
+        overflow-y: auto;
+        left: 0;
+    }
+
+    .section-title {
+        font-size: 20px;
+        color: #2d3436;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+    /* Main Content Styles */
+    .main-content {
+        flex: 1;
+        padding: 20px;
+        margin-left: 300px; /* Same as sidebar width */
+    }
+
+    .profile-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(74, 96, 117, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .profile-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .profile-picture {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border: 4px solid white;
+        margin-bottom: 20px;
+    }
+
+    .user-name {
+        font-size: 32px;
+        font-family: 'Segoe UI';
+        color: #2d3436;
+        font-weight: 600;
+    }
+
+    /* Item Card Styles */
+    .item-wrapper {
+        margin-bottom: 20px;
+    }
+
+    .card {
+        border-radius: 12px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .img-wrapper {
+        height: 120px;
+        overflow: hidden;
+    }
+
+    .card-img-top {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 12px;
+        text-align: center;
+    }
+
+    .price {
+        color: #3b3b3b;
+        font-weight: 700;
+        font-size: 18px;
+        display: block;
+    }
+
+    .item-name {
+        font-weight: 600;
+        font-size: 16px;
+        color: #444343;
+        display: block;
+        margin: 5px 0;
+    }
+
+    .year-text {
+        color: #777575;
+        font-size: 14px;
+        display: block;
+    }
+
+    .card-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* Bio Section Styles */
+    .bio-section {
+        margin-top: 20px;
+    }
+
+    .list-group-item {
+        border: none;
+        background: #f8f9fa;
+        margin-bottom: 10px;
+        border-radius: 10px !important;
+        padding: 15px;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        border: 2px solid #eaeaea;
+        padding: 15px;
+        resize: vertical;
+    }
+
+    .btn-primary {
+        background-color: #4a6075;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 12px;
+    }
+
+    .btn-secondary {
+        margin-top: 15px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .page-container {
+            flex-direction: column;
+        }
+
+        .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+
+        .main-content {
+            margin-left: 0;
+            padding: 20px;
+        }
+
+        .profile-card {
+            margin-top: 20px;
+        }
+    }
+</style>
+
+{% endblock %}

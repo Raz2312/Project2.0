@@ -1,0 +1,210 @@
+{% extends "base.html" %} 
+{% block title %}Big Item{% endblock %} 
+{% block content %}
+<style>
+    .image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        padding: 2rem;
+    }
+
+    .image-wrapper {
+        border: 2px solid #e0e0e0;
+        border-radius: 15px;
+        padding: 3rem;
+        background-color: #ffffff;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .image-wrapper:hover {
+        transform: translateY(-5px);
+    }
+
+    .image-wrapper img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .sidebar {
+        background-color: #ffffff;
+        min-height: 1000px;
+        padding: 3rem 2rem;
+        border-left: 2px solid #eaeaea;
+        border-right: 2px   solid #eaeaea;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .sidebar-content {
+        padding-right: 1rem;
+    }
+
+    .item-name {
+        font-size: clamp(40px, 6vw, 80px);
+        font-family: 'Arial';
+        font-weight: 700;
+        margin-bottom: 2rem;
+        text-align: right;
+        color: #2d3436;
+        line-height: 1.2;
+    }
+
+    .year-price {
+        font-size: 25px;
+        font-family: 'Arial', sans-serif;
+        margin-top: 1.5rem;
+        text-align: right;
+        color: #7d8486;
+        font-weight: 600;
+    }
+
+    .description, .condition, .id {
+        font-size: 18px;
+        font-family: 'system-ui', -apple-system, BlinkMacSystemFont;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        word-wrap: break-word;
+        text-align: right;
+        margin-bottom: 1rem;
+        color: #2d3436;
+        border: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+
+    .button-container {
+        text-align: right;
+        margin-top: 2rem;
+    }
+
+    .button-30 {
+        width: 100%;
+        align-items: center;
+        appearance: none;
+        background-color: #0069d3;
+        border-radius: 8px;
+        border: 1px solid #a6aaac;
+        box-sizing: border-box;
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-flex;
+        font-family: "system-ui", -apple-system, BlinkMacSystemFont;
+        font-weight: 600;
+        height: 48px;
+        justify-content: center;
+        line-height: 1;
+        padding: 0 24px;
+        position: relative;
+        text-decoration: none;
+        transition: all .3s ease;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        font-size: 16px;
+    }
+
+    .button-30:hover {
+        background-color: #2d3436;
+        color: #ffffff;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .button-30:active {
+        transform: translateY(0);
+    }
+
+    /* Add a subtle background color to the whole page */
+    body {
+        background-color: #f8f9fa;
+    }
+
+    /* Make the container full-height */
+    .container-fluid {
+        min-height: 100vh;
+    }
+
+    /* Add some responsive padding */
+    @media (max-width: 768px) {
+        .sidebar {
+            padding: 2rem 1rem;
+        }
+        
+        .image-wrapper {
+            padding: 1.5rem;
+        }
+    }
+    .user-name{
+        font-size: 20px;
+        font-family: 'Arial', sans-serif;
+        font-weight: 600;   
+    }
+
+    .profile-picture {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .user-name {
+        font-size: 20px;
+        color: #2d3436;
+        font-weight: 500;
+        font-family: 'Segoe UI';
+    }
+    .seller-info{
+        font-size: 20px;
+        color: #2d3436;
+        font-weight: 500;
+        font-family: 'Segoe UI';
+        text-align: left;
+        margin-bottom: 10px;
+    }
+
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Main content with image -->
+        <div class="col-md-9">
+            <div class="image-container">
+                <div class="image-wrapper">
+                    <h1 class="item-name">{{ item.name }}</h1>  
+                    <img src="{{ url_for('static', filename='pic2.jpg') }}">
+                    <p class="year-price">Date: {{ item.year }}<br>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right sidebar with details -->
+        <div class="col-md-3 sidebar">
+            <div class="sidebar-content">
+                    <p class="year-price">{{  item.price }}₪</p>
+                    <p class="description">{{ item.other }}</p> 
+                    <p class="condition">Condition: {{ item.condition }}</p>
+                    <div class="button-container" style="margin-top: 20rem;">
+                        <div class="seller-info">Seller Info:</div>
+                            <p style="display: flex; align-items: center;">
+                                <img src="{{ url_for('static', filename='pic2.jpg') }}" class="profile-picture" style="margin-right: 20px;">
+                                <a href="{{ url_for('profilefinder', user_id=user.id) }}" class="user-name">{{ user.user_name }}</a>
+                            </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+{% endblock %}
