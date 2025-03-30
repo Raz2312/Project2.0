@@ -31,7 +31,7 @@
                             Don't have an account? <a href="{{ url_for('auth.sign_up') }}">Sign up</a>
                         </div>
                         <div class="d-grid">
-                            <button type="submit" class="btn btn-primary w-100">Login</button>
+                            <button type="submit" class="btn login-sigup-button w-100">Login</button>
                         </div>
                     </form>
                 </div>
@@ -53,26 +53,7 @@
             padding: 32px;
         }
         
-        .top-text {
-            text-align: center;
-            font-size: 40px;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(45deg, #007bff, #0056b3);
-            border: none;
-            padding: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
-        }
-        
         .mb-3 {
             margin-top: 20px;
         }

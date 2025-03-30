@@ -8,7 +8,7 @@
             <h3 class="top-text mb-4">Sign Up</h3>
             <form method="POST">
               <div class="row">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-6 above-box-text">
                   <label for="firstName" class="form-label">First Name</label>
                   <input
                     type="text"
@@ -82,7 +82,7 @@
               <div style="text-align: center; margin-bottom: 20px; font-weight: 500;">Have an account? <a href="/login">Login</a></div>
 
               <div class="d-grid">
-                <button type="submit" class="btn btn-primary w-100" >Sign Up</button>
+                <button type="submit" class="btn login-sigup-button w-100" >Sign Up</button>
               </div>
             </form>
           </div>
@@ -103,26 +103,6 @@
         .card-body {
             padding: 32px;
         }
-        .top-text {
-          text-align: center;
-          font-size: 40px;
-        }
-        .btn-primary {
-            background: linear-gradient(45deg, #007bff, #0056b3);
-            border: none;
-            padding: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
-        }
-        .mb-3 {
-          font-weight: 500;
-        }
   </style>
 {% endblock %}

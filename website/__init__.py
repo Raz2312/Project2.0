@@ -1,23 +1,34 @@
-from flask import Flask, request, flash, render_template, redirect, url_for
+from flask import Flask, request, flash, render_template, redirect, url_for , jsonify
 from flask_login import LoginManager, login_user, login_required, current_user
 import firebase_admin
 from firebase_admin import credentials, firestore 
+from ebaysdk.finding import Connection as Finding
+from ebaysdk.exception import ConnectionError
+import json
+import os
+import datetime
+import sys
+from datetime import datetime, timedelta
+import googlemaps
 
-# Initialize Firebase
+API_KEY = "AIzaSyAtcWj6Uog3a16LgoF9NeXe_A951igbzsc"
+
 cred = credentials.Certificate(r"c:\Users\RAZ\Downloads\website-firebase-2f02a-firebase-adminsdk-1gcvh-31adc67afb.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 
+
 class User:#מאיפיינים של משתמש
-    def __init__(self, id, user_name, email, password, first_name, last_name, img_id):
+    def __init__(self, id, user_name, email, password, first_name, last_name, profile_pic, Bio):
         self.id = id
         self.user_name = user_name
         self.email = email
         self.password = password
         self.first_name = first_name
         self.last_name = last_name
-        self.img_id = img_id
+        self.Bio = Bio
+        self.profile_pic = profile_pic
         self.items = []
 
     @property
@@ -35,7 +46,6 @@ class User:#מאיפיינים של משתמש
     def get_id(self):
         return self.id
 
-
 class Item:# מאפיינים של אייטם
     def __init__(self, name, year, condition, price, other, date, owner_id, product_picture, item_id):
         self.name = name
@@ -48,17 +58,22 @@ class Item:# מאפיינים של אייטם
         self.product_picture = product_picture
         self.item_id = item_id
 
+
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'hjshjhdjah kjshkjdhjs'
 
-    from .views import views
     from .auth import auth
-    from .list import list
+    from .profile_changes import profile_changes
+    from .pages import pages
+    from .item_funcs import item_funcs
 
-    app.register_blueprint(views, url_prefix='/')
+
     app.register_blueprint(auth, url_prefix='/')
-    app.register_blueprint(list, url_prefix='/')
+    app.register_blueprint(profile_changes, url_prefix='/')
+    app.register_blueprint(pages, url_prefix='/')
+    app.register_blueprint(item_funcs, url_prefix='/')
+    
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
@@ -79,7 +94,8 @@ def create_app():
                 password=user_info.get('password', ''),
                 first_name=user_info.get('first_name', ''),
                 last_name=user_info.get('last_name', ''),
-                img_id=user_info.get('profile_pic', None),
+                profile_pic=user_info.get('profile_pic', None),
+                Bio=user_info.get('Bio', 'Unknown')
             )
 
             items_ref = user_ref.collection('Items').stream()
@@ -112,6 +128,22 @@ def create_app():
         flash("User not found!", category='error')
         return redirect(url_for('auth.login'))
     
+    gmaps = googlemaps.Client(key='AIzaSyAtcWj6Uog3a16LgoF9NeXe_A951igbzsc')
+
+    @app.route('/autocomplete', methods=['GET'])
+    def autocomplete_address():
+        input_text = request.args.get('input')
+        print(f"Input received: {input_text}")  
+        if not input_text:
+            return jsonify({'predictions': []})
+        try:
+            autocomplete_result = gmaps.places_autocomplete(input_text)
+            predictions = autocomplete_result
+            print(f"Predictions: {predictions}")  
+            return jsonify({'predictions': predictions})
+        except Exception as e:
+            print(f"Error: {str(e)}")  
+            return jsonify({'error': str(e)}), 500
 
     @app.route('/profile/<user_id>', methods=['GET', 'POST'])
     @login_required
@@ -128,30 +160,31 @@ def create_app():
                 password=user_info.get('password'),
                 first_name=user_info.get('first_name'),
                 last_name=user_info.get('last_name'),
-                img_id=user_info.get('profile_pic')
+                profile_pic=user_info.get('profile_pic'),
+                Bio=user_info.get('Bio')
             )
             return render_template("Profile.html", user=user)
         else:
             flash("User not found!", category='error')
-            return redirect(url_for('views.home'))
+            return redirect(url_for('views.index'))
     
-    @app.route('/update_profile', methods=['POST'])
-    @login_required
-    def update_profile():
-        user_ref = db.collection('Users').document(current_user.id)
-        updated_data = {
-            "user_name": request.form['user_name'],
-            "email": request.form['email'],
-            "first_name": request.form['first_name'],
-            "last_name": request.form['last_name'],
-            "profile_pic": request.form['profile_pic']
-        }
-        user_ref.update(updated_data)
-        flash("Profile updated successfully!", category='success')
-        return redirect(url_for('profile'))
 
-    @app.route('/', methods=['GET', 'POST'])
-    def upload_image():
-        return render_template('Myprofile.html', user=current_user)
 
+    @app.route('/api/locations', methods=['GET'])
+    def get_locations():
+        try:
+            items_ref = db.collection('Items').stream()
+            locations = [{'address': item.to_dict().get('address')} for item in items_ref if item.to_dict().get('address')]
+            return jsonify(locations)
+        except Exception as e:
+            print(f"Error fetching locations: {e}")
+            return jsonify({'error': 'Failed to fetch locations'}), 500
+
+    @app.errorhandler(404)  
+    def page_not_found(e):
+        return render_template('error.html', error=404, message="Page not found", user=current_user), 404
+
+    @app.errorhandler(500)
+    def internal_server_error(e):
+        return render_template('error.html', error=500, message="Internal server error", user=current_user), 500
     return app

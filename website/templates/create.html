@@ -3,11 +3,14 @@
 {% block title %}
     Create Item
 {% endblock %}
-<head>create your item</head>
+<head>
+    <!-- Ensure to include your CSS file correctly -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    create your item
+</head>
 {% block content %}
 <div class="container-fluid">
     <div class="row">
-        <!-- Main content with image -->
         <div class="col-md-9">
             <div class="image-container">
                 <div class="image-wrapper">
@@ -18,72 +21,81 @@
                                name="name" 
                                placeholder="Item Name" 
                                required>
-                        
-                        <div class="image-upload-wrapper">
-                            <input type="file" 
-                                   id="product_picture" 
-                                   name="product_picture" 
-                                   accept="image/*"
-                                   onchange="previewImage(this)"
-                                   style="display: none;">
-                            <div id="imagePreview" 
-                                 class="empty-image-space"
-                                 onclick="document.getElementById('product_picture').click();">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                <p>Click to upload image</p>
+                               
+                               <div class="image-upload-wrapper">
+                                <input type="file" 
+                                       id="product_picture" 
+                                       name="product_picture" 
+                                       accept="image/*"
+                                       onchange="previewImage(this)"
+                                       style="display: none;">
+                                <div id="imagePreview" 
+                                     class="empty-image-space"
+                                     onclick="document.getElementById('product_picture').click();">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload image</p>
+                                </div>
                             </div>
+                            
+                            <p class="year-price">
+                                Date: <input type="text" 
+                                id="year" 
+                                name="year" 
+                                placeholder="Enter year" 
+                                required>
+                            </p>
                         </div>
-                        
-                        <p class="year-price">
-                            Date: <input type="text" 
-                                       id="year" 
-                                       name="year" 
-                                       placeholder="Enter year" 
-                                       required>
-                        </p>
+                    </div>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Right sidebar with details -->
-        <div class="col-md-3 sidebar">
-            <div class="sidebar-content">
-                <p class="year-price">
-                    <input type="text" 
-                           id="price" 
-                           name="price" 
-                           placeholder="Price ₪" 
-                           step="0.01" 
-                           required>₪
-                </p>
                 
-                <p class="description">
-                    <textarea id="other" 
-                             name="other" 
-                             placeholder="Description" 
-                             required></textarea>
-                </p>
-                
-                <p class="condition">
-                    Condition: 
-                    <select id="condition" 
+                <div class="col-md-3 sidebar">
+                    <div class="sidebar-content">
+                        <p class="year-price">
+                            <input type="text" 
+                            id="price" 
+                            name="price" 
+                            placeholder="Price ₪" 
+                            step="0.01" 
+                            required>
+                        </p>
+                        
+                        <p class="description">
+                            <textarea id="other" 
+                            name="other" 
+                            placeholder="Description" 
+                            required></textarea>
+                        </p>
+                        
+                        <p class="condition">
+                            Condition: 
+                            <select id="condition" 
                             name="condition" 
                             required 
                             class="condition-select">
-                        <option value="" disabled selected>Select condition...</option>
-                        <option value="Brand new">Brand new</option>
-                        <option value="Used">Used</option>
-                        <option value="Damaged">Damaged</option>
-                    </select>
-                </p>
-                
-                <div class="button-container">
-                    <button type="submit" class="button-30">Create Item</button>
+                            <option value="" disabled selected>Select condition...</option>
+                            <option value="Brand new">Brand new</option>
+                            <option value="Used">Used</option>
+                            <option value="Damaged">Damaged</option>
+                        </select>
+                        </p>
+                        
+                        <!-- Moved the address input here -->
+                        <input type="text" id="addressInput" name="address" placeholder="Enter address" class="address-input" required>
+                        <ul id="suggestions"></ul>
+
+                        <div class="button-container">
+                            <button type="submit" class="button-30">Create Item</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </form>
-    </div>
+<div class="api-response">
+    {% if api_response %}
+        <p>{{ api_response }}</p>
+    {% endif %}
+</div>
 </div>
 
 <style>
@@ -122,11 +134,32 @@
         border-right: 2px solid #eaeaea;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: flex-start;
+        width: 400px;
     }
 
     .sidebar-content {
-        padding-right: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        margin-top: 210px;
+    }
+
+    .year-price, .description, .condition, .address-input {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        text-align: left;
+    }
+
+    .address-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
     }
 
     .item-name {
@@ -146,9 +179,10 @@
         font-size: 25px;
         font-family: 'Arial', sans-serif;
         margin-top: 1.5rem;
-        text-align: right;
+        text-align: left;
         color: #7d8486;
         font-weight: 600;
+
     }
 
     .year-price input {
@@ -157,7 +191,7 @@
         background: transparent;
         color: #7d8486;
         width: 120px;
-        text-align: right;
+        text-align: left;
     }
 
     .description, .condition {
@@ -167,7 +201,7 @@
         border-radius: 8px;
         padding: 1rem 1.5rem;
         word-wrap: break-word;
-        text-align: right;
+        text-align: left;
         margin-bottom: 1rem;
         color: #2d3436;
         border: none;
@@ -192,11 +226,12 @@
         font-size: inherit;
         color: inherit;
         width: 70%;
-        text-align: right;
+        text-align: left;
     }
 
     .button-container {
-        text-align: right;
+        display: flex;
+        justify-content: center;
         margin-top: 2rem;
     }
 
@@ -241,12 +276,10 @@
         outline: none;
     }
 
-    /* Make the container full-height */
     .container-fluid {
         min-height: 100vh;
     }
 
-    /* Add some responsive padding */
     @media (max-width: 768px) {
         .sidebar {
             padding: 2rem 1rem;
@@ -264,7 +297,7 @@
         font-size: inherit;
         color: inherit;
         width: 70%;
-        text-align: right;
+        text-align: left;
         -webkit-appearance: none;
         -moz-appearance: none;
         appearance: none;
@@ -317,6 +350,27 @@
         font-size: 16px;
         margin: 0;
     }
+
+    #suggestions {
+        list-style-type: none; 
+        padding: 0; 
+        margin: 0; 
+        border: 1px solid #ccc; 
+        border-radius: 4px; 
+        max-height: 150px; 
+        overflow-y: auto; 
+    }
+    #suggestions li {
+        padding: 10px;
+        cursor: pointer; 
+        border-bottom: 1px solid #e0e0e0; 
+    }
+    #suggestions li:last-child {
+        border-bottom: none; 
+    }
+    #suggestions li:hover {
+        background-color: #f0f0f0; 
+    }
 </style>
 
 <script>
@@ -332,4 +386,70 @@ function previewImage(input) {
     }
 }
 </script>
+
+<body>
+
+    <input type="text" id="addressInput" placeholder="Enter address" class="address-input" required>
+    <ul id="suggestions"></ul>
+
+    <script>
+        const addressInput = document.getElementById('addressInput');
+        const suggestionsList = document.getElementById('suggestions');
+
+        addressInput.addEventListener('input', async () => {
+            const inputText = addressInput.value;
+
+
+            suggestionsList.innerHTML = '';
+
+            if (inputText.length > 2) { 
+                try {
+                    const response = await fetch(`/autocomplete?input=${encodeURIComponent(inputText)}`); 
+                    const data = await response.json();
+
+                    data.predictions.forEach(prediction => {    
+                        const li = document.createElement('li');
+                        li.textContent = prediction.description;
+                        li.addEventListener('click', () => {
+                            addressInput.value = prediction.description;
+                            suggestionsList.innerHTML = ''; 
+                        });
+                        suggestionsList.appendChild(li);
+                    });
+                } catch (error) {
+                    console.error('Error fetching suggestions:', error);
+                }
+            }
+        });
+    </script>
+    <style>
+        #addressInput {
+            width: 200px; /* Set width of the input */
+            padding: 10px; /* Add padding */
+            border: 1px solid #ccc; /* Add border */
+            border-radius: 4px; /* Rounded corners */
+            margin-bottom: 10px; /* Space below the input */
+        }
+        #suggestions {
+            list-style-type: none; /* Remove bullet points */
+            padding: 0; /* Remove padding */
+            margin: 0; /* Remove margin */
+            border: 1px solid #ccc; /* Add border */
+            border-radius: 4px; /* Rounded corners */
+            max-height: 150px; /* Limit height */
+            overflow-y: auto; /* Scroll if too many suggestions */
+        }
+        #suggestions li {
+            padding: 10px; /* Add padding to list items */
+            cursor: pointer; /* Change cursor on hover */
+            border-bottom: 1px solid #e0e0e0; /* Add a line between suggestions */
+        }
+        #suggestions li:last-child {
+            border-bottom: none; /* Remove the line for the last item */
+        }
+        #suggestions li:hover {
+            background-color: #f0f0f0; /* Highlight on hover */
+        }
+    </style>
+</body>
 {% endblock %}
