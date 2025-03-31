@@ -4,7 +4,6 @@
     Create Item
 {% endblock %}
 <head>
-    <!-- Ensure to include your CSS file correctly -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     create your item
 </head>
@@ -79,7 +78,6 @@
                         </select>
                         </p>
                         
-                        <!-- Moved the address input here -->
                         <input type="text" id="addressInput" name="address" placeholder="Enter address" class="address-input" required>
                         <ul id="suggestions"></ul>
 
@@ -424,31 +422,31 @@ function previewImage(input) {
     </script>
     <style>
         #addressInput {
-            width: 200px; /* Set width of the input */
-            padding: 10px; /* Add padding */
-            border: 1px solid #ccc; /* Add border */
-            border-radius: 4px; /* Rounded corners */
-            margin-bottom: 10px; /* Space below the input */
+            width: 200px; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            margin-bottom: 10px; 
         }
         #suggestions {
-            list-style-type: none; /* Remove bullet points */
-            padding: 0; /* Remove padding */
-            margin: 0; /* Remove margin */
-            border: 1px solid #ccc; /* Add border */
-            border-radius: 4px; /* Rounded corners */
-            max-height: 150px; /* Limit height */
-            overflow-y: auto; /* Scroll if too many suggestions */
+            list-style-type: none; 
+            padding: 0; 
+            margin: 0; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            max-height: 150px; 
+            overflow-y: auto; 
         }
         #suggestions li {
-            padding: 10px; /* Add padding to list items */
-            cursor: pointer; /* Change cursor on hover */
-            border-bottom: 1px solid #e0e0e0; /* Add a line between suggestions */
+            padding: 10px; 
+            cursor: pointer; 
+            border-bottom: 1px solid #e0e0e0; 
         }
         #suggestions li:last-child {
-            border-bottom: none; /* Remove the line for the last item */
+            border-bottom: none; 
         }
         #suggestions li:hover {
-            background-color: #f0f0f0; /* Highlight on hover */
+            background-color: #f0f0f0; 
         }
     </style>
 </body>

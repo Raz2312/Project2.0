@@ -3,7 +3,6 @@
 {% block content %}
 <head>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtcWj6Uog3a16LgoF9NeXe_A951igbzsc&callback=initMiniMap" async defer></script>
-    <!-- Replace YOUR_API_KEY with your actual Google Maps API key -->
 </head>
 <style>
     .image-container {
@@ -225,7 +224,6 @@
 
 <div class="container-fluid">
     <div class="row">
-        <!-- Main content with image -->
         <div class="col-md-9">
             <div class="image-container">
                 <div class="image-wrapper">
@@ -236,7 +234,6 @@
             </div>
         </div>
         
-        <!-- Right sidebar with details -->
         <div class="col-md-3 sidebar">
             <div class="sidebar-content">
                 <p class="year-price">{{  item.price }}₪</p>
@@ -244,16 +241,13 @@
                 <p class="condition">Condition: {{ item.condition }}</p>
                 
                 {% if current_user.id == user.id %}
-                <!-- Add Delete Button -->
                 <form method="POST" action="{{ url_for('item_funcs.delete', item_id=item.item_id) }}">
                     <button type="submit" class="button-delete">Delete Item</button>
                 </form>
                 {% endif %}
                 
-                <!-- Mini Map Container -->
                 <div id="mini-map"></div>
 
-                <!-- Move the seller card below the mini map -->
                 <div class="seller-card">
                     <h3 class="seller-card-title">Seller</h3>
                     <div class="seller-profile">

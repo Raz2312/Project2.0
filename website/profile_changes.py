@@ -16,7 +16,6 @@ profile_changes = Blueprint('profile_changes', __name__)
 def update_bio():
         bio = request.form.get('Bio')  
         user_ref = db.collection('Users').document(current_user.id)
-        user_ref.update({"Bio": firestore.DELETE_FIELD})
         user_ref.update({"Bio": bio})
         flash("Bio updated successfully!", category='success')
         return redirect(url_for('pages.profile2', owner_id=current_user.id))

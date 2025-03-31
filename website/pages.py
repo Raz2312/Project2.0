@@ -50,7 +50,6 @@ def BigItem(item_id, owner_id):
 # /////////////////////////////////////////////////////////////////////////////////////////////////
 def show_items():
     items = []
-    items = []
     users_ref = db.collection('Users')
     for user_doc in users_ref.stream():
         owner_id = user_doc.id
@@ -124,9 +123,3 @@ def show_items():
     
     return render_template('public.html', items=items, user=current_user)
 # /////////////////////////////////////////////////////////////////////////////////////////////////
-@pages.route("/map")
-@login_required
-def Map():
-    items = show_items()
-    users = show_users()
-    return  render_template('map.html',user = current_user,items=items,users=users)
