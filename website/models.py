@@ -4,7 +4,8 @@ from flask import Flask, request, flash, Response, render_template, redirect, ur
 from flask_login import UserMixin
 
 
-class User(UserMixin):#מחלקת 
+# מחלקת משתמש המשתמשת ב-UserMixin עבור פונקציונליות Flask-Login
+class User(UserMixin):
     def __init__(
         self,
         id,
@@ -17,29 +18,32 @@ class User(UserMixin):#מחלקת
         profile_pic,
         items=None,
     ):
-        self.id = id
-        self.user_name = user_name
-        self.email = email
-        self.password = password
-        self.first_name = first_name
-        self.last_name = last_name
-        self.Bio = Bio
-        self.profile_pic = profile_pic
-        self.items = items if items is not None else [] 
+        # הגדרת תכונות המשתמש
+        self.id = id                # מזהה ייחודי
+        self.user_name = user_name  # שם משתמש
+        self.email = email          # כתובת דוא"ל
+        self.password = password    # סיסמה מוצפנת
+        self.first_name = first_name  # שם פרטי
+        self.last_name = last_name    # שם משפחה
+        self.Bio = Bio              # ביוגרפיה
+        self.profile_pic = profile_pic  # תמונת פרופיל
+        self.items = items if items is not None else []  # רשימת פריטים של המשתמש
 
     def add_item(self, item):
-        """Adds an Item to the User's item list."""
+        """הוספת פריט לרשימת הפריטים של המשתמש."""
         self.items.append(item)
 
-class Item:# מאפיינים של אייטם
-    def __init__(self, name, year, condition, price, other, date, owner_id, product_picture, item_id,address):
-        self.name = name
-        self.year = year
-        self.condition = condition
-        self.price = price
-        self.other = other
-        self.date = date
-        self.owner_id = owner_id
-        self.product_picture = product_picture
-        self.item_id = item_id
-        self.address = address
+# מחלקה המגדירה את מאפייני הפריט
+class Item:
+    def __init__(self, name, year, condition, price, other, date, owner_id, product_picture, item_id, address):
+        # הגדרת תכונות הפריט
+        self.name = name            # שם הפריט
+        self.year = year            # שנת ייצור
+        self.condition = condition  # מצב הפריט
+        self.price = price          # מחיר
+        self.other = other          # מידע נוסף
+        self.date = date            # תאריך הוספה
+        self.owner_id = owner_id    # מזהה הבעלים
+        self.product_picture = product_picture  # תמונת הפריט
+        self.item_id = item_id      # מזהה ייחודי של הפריט
+        self.address = address      # כתובת המיקום של הפריט

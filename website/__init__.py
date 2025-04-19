@@ -21,15 +21,15 @@ db = firestore.client()
 
 class User:#מאיפיינים של משתמש
     def __init__(self, id, user_name, email, password, first_name, last_name, profile_pic, Bio):
-        self.id = id
-        self.user_name = user_name
-        self.email = email
-        self.password = password
-        self.first_name = first_name
-        self.last_name = last_name
-        self.Bio = Bio
-        self.profile_pic = profile_pic
-        self.items = []
+        self.id = id                # מזהה ייחודי
+        self.user_name = user_name  # שם משתמש
+        self.email = email          # כתובת דוא"ל
+        self.password = password    # סיסמה מוצפנת
+        self.first_name = first_name  # שם פרטי
+        self.last_name = last_name    # שם משפחה
+        self.Bio = Bio              # ביוגרפיה
+        self.profile_pic = profile_pic  # תמונת פרופיל
+        self.items = []             # רשימת פריטים
 
     @property
     def is_authenticated(self):
@@ -48,15 +48,15 @@ class User:#מאיפיינים של משתמש
 
 class Item:# מאפיינים של אייטם
     def __init__(self, name, year, condition, price, other, date, owner_id, product_picture, item_id):
-        self.name = name
-        self.year = year
-        self.condition = condition
-        self.price = price
-        self.other = other
-        self.date = date
-        self.owner_id = owner_id
-        self.product_picture = product_picture
-        self.item_id = item_id
+        self.name = name            # שם הפריט
+        self.year = year            # שנת ייצור
+        self.condition = condition  # מצב הפריט
+        self.price = price          # מחיר
+        self.other = other          # מידע נוסף
+        self.date = date            # תאריך
+        self.owner_id = owner_id    # מזהה בעלים
+        self.product_picture = product_picture  # תמונת מוצר
+        self.item_id = item_id      # מזהה פריט
 
 
 def create_app():
